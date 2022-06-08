@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+// Bank Account class
 public class BankAccount {
 
     private String name="";
@@ -91,15 +92,11 @@ public class BankAccount {
     }
 
 
-
-
-
-
-    protected float withdraw(String withdrawAmt){
+    public float withdraw(String withdrawAmt){
         Float withdrawAmtF = null;
         try{
-            Float withdrawAmtF = Float.parseFloat(withdrawAmt);
-            if (depositAmtF.floatValue()<=0){
+            withdrawAmtF = Float.parseFloat(withdrawAmt);
+            if (withdrawAmtF.floatValue()<=0){
                 throw new IllegalArgumentException("Invalid amount entered");
             }
 
@@ -107,24 +104,30 @@ public class BankAccount {
                 throw new IllegalArgumentException("Account is closed");
             }
 
+            if(withdrawAmtF.floatValue() > this.balance){
+                throw new IllegalArgumentException("Not enough in the account");
+            }
+
             //Construct the transaction history event log
             StringBuilder txnStrbld = new StringBuilder();
             txnStrbld.append("Deposit $");
-            txnStrbld.append(depositAmtF.floatValue());
+            txnStrbld.append(withdrawAmtF.floatValue());
             txnStrbld.append("at");
             txnStrbld.append(LocalDateTime.now());
             System.out.println(txnStrbld.toString());
             //save event log into txn linkedlist
             transaction.add(txnStrbld.toString());
             //update the deposit amount
-            this.balance = this.balance + depositAmtF.floatValue();
+            this.balance = this.balance + withdrawAmtF.floatValue();
         }catch(NumberFormatException e){
             System.err.print(e);
-            throw new IllegalArgumentException("Invalid deposit amount");
+            throw new IllegalArgumentException("Invalid withdrawal amount");
         }
+        return withdrawAmtF.floatValue();
     }
 
-    protected void deposit(String depositAmt){
+
+    public void deposit(String depositAmt){
         try{
             Float depositAmtF = Float.parseFloat(depositAmt);
             if (depositAmtF.floatValue()<=0){
@@ -152,7 +155,6 @@ public class BankAccount {
         }
         
     }
-
 
 
     
